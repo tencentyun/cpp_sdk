@@ -72,7 +72,7 @@ How to start
                         expired, 
                         BUCKET,
 						fileId);
-	//1. 单次签名
+	//2. 单次签名
     string sign = Auth::appSignOnce(
                         APP_ID, 
 						SECRET_ID,
@@ -80,7 +80,7 @@ How to start
                         BUCKET,
 						fileId);					
 						
-#### 上传图片
+#### 上传图片-简单上传
 	//1. 最简单的上传接口
 	api.upload(srcPath);
 	api.dump_res();
@@ -88,6 +88,7 @@ How to start
 	api.upload(srcPath,fileId);
 	api.dump_res();
 	
+#### 上传图片-分片上传
 	//分片上传，适用于大图片,可以指定分片大小
     //如果中途失败，以相同的参数再次调用uploadSlice可以自动断点续传
     api.uploadSlice(
@@ -114,5 +115,5 @@ How to start
 #### 黄图识别
 	api.pornDetect(url);
 	api.dump_res();
-	//返回结果的各字段含义，请参考官网wiki文档
-	//http://www.qcloud.com/wiki/%E4%B8%87%E8%B1%A1%E4%BC%98%E5%9B%BE%E6%99%BA%E8%83%BD%E9%89%B4%E9%BB%84%E6%96%87%E6%A1%A3	
+	返回结果的各字段含义，请参考官网wiki文档
+	http://www.qcloud.com/wiki/%E4%B8%87%E8%B1%A1%E4%BC%98%E5%9B%BE%E6%99%BA%E8%83%BD%E9%89%B4%E9%BB%84%E6%96%87%E6%A1%A3	
