@@ -56,6 +56,7 @@ How to start
 如果要使用图片，需要创建图片操作类对象	
 	//v1版本	
 	Imageapi api(APP_ID_V1,	SECRET_ID_V1,SECRET_KEY_V1,30);
+	
 	//v2版本
 	Imageapi api(APP_ID_V2,	SECRET_ID_V2, SECRET_KEY_V2, BUCKET,30);
 	
