@@ -1,0 +1,7 @@
+aux_source_directory(. src_dir)
+include_directories(../include)
+link_directories(../lib)
+add_library(imagesdk STATIC ${src_dir})
+target_link_libraries(imagesdk curl crypto ssl rt jsoncpp z)
+#set_target_properties(cosdk PROPERTIES output_name "libcosdk")
+set_target_properties(imagesdk PROPERTIES OUTPUT_NAME "imagesdk")
