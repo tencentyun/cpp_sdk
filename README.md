@@ -26,9 +26,7 @@ cmake ..
 make  
 
 需要将sample.cpp里的appid、secretId、secretKey、bucket等信息换成你自己的。  
-生成的sample就可以直接运行，试用，  
-
-生成的静态库，名称为:libimagesdk.a
+生成的sample就可以直接运行，试用，生成的静态库，名称为:libimagesdk.a
 
 ##将生成的库链接进自己的项目
 生成的libimagesdk.a放到你自己的工程里lib路径下，  
@@ -54,6 +52,7 @@ How to start
 使用接口前，必须调用：  
     Imageapi::global_init();  
 如果要使用图片，需要创建图片操作类对象	
+
 	//v1版本	
 	Imageapi api(APP_ID_V1,	SECRET_ID_V1,SECRET_KEY_V1,30);
 	

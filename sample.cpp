@@ -15,15 +15,15 @@ const  string BUCKET = "testtest";		//¿Õ¼äÃû
 
 void picBase(Imageapi &api, const string &srcPath)
 {
-/*
 	cout<<"upload-----------------"<<endl;
 	api.upload(srcPath);
 	api.dump_res();
-	*/
+	
+	/*
 	cout<<"upload-----------------"<<endl;
 	api.uploadSlice(srcPath);
 	api.dump_res();
-	
+	*/
 	
 	if(0 == api.retCode)
 	{
@@ -54,7 +54,7 @@ void apiV2Demo(const string &srcPath) {
 	Imageapi api(APP_ID_V2,
 			SECRET_ID_V2,
 			SECRET_KEY_V2,
-			BUCKET,30);
+			BUCKET);
 	
 	picBase(api, srcPath);
 
@@ -68,7 +68,7 @@ void apiV1Demo(const string &srcPath) {
 	
 	Imageapi api(APP_ID_V1,
 			SECRET_ID_V1,
-			SECRET_KEY_V1,30);
+			SECRET_KEY_V1);
 	
 	picBase(api, srcPath);
 
