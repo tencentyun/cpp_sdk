@@ -35,7 +35,6 @@ unsigned char ToHex(unsigned char x)
     return table[x];
 }
 
-//特殊的urlEncode，'/' 不转义
 std::string cosUrlEncode(const std::string& str)
 {
     std::string strTemp = "";
@@ -320,8 +319,6 @@ int Imageapi::upload(
     vector<string> headers;
     headers.push_back("Authorization: " + sign);
 
-    string sha1 = genFileSHA1AndLen(srcPath);
-
     struct curl_httppost *firstitem = NULL,
                          *lastitem = NULL;
 	if(!magicContext.empty())
@@ -383,7 +380,6 @@ int Imageapi::uploadSlice(
 	  }
 
 	  if (retJson["data"].isMember("url")) {
-		  //秒传成功，直接返回了url
 		  return retCode;
 	  } 
 
