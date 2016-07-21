@@ -115,8 +115,14 @@ public:
         const string &fileId,
         const uint64_t userId=0);
 
-	int pornDetect(
+    int pornDetect(
         const string &pronUrl);
+
+	int pornDetectUrl(
+        const string *pornUrl, const int size);
+
+    int pornDetectFile(
+        const string *pornFile, const int size);
 
     void dump_res();
 

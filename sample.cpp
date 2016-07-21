@@ -4,14 +4,14 @@
 using namespace std;
 using namespace Qcloud_image;
 
-const int APP_ID_V1 = 201893;
-const  string SECRET_ID_V1 = "AKIDAq4qH0S1npdWKarPPyuQv0nrnZdoPtWu";
-const  string SECRET_KEY_V1 = "No6ZubvQGg8d8CDC8xQQyIMrSZm1Cm9X";
+const int APP_ID_V1 = 111;
+const  string SECRET_ID_V1 = "SECRET_ID_V1";
+const  string SECRET_KEY_V1 = "SECRET_KEY_V1";
 	
-const int APP_ID_V2 = 10004877;
-const  string SECRET_ID_V2 = "AKIDGEXDZ3dFhjp2BNyERA29yMp4XvRiYqUy";
-const  string SECRET_KEY_V2 = "f4htD982j7tJjAXA9yHXdACmt9qaAtBJ";
-const  string BUCKET = "testtest";		//空间名
+const int APP_ID_V2 = 111;
+const  string SECRET_ID_V2 = "SECRET_ID_V2";
+const  string SECRET_KEY_V2 = "SECRET_KEY_V2";
+const  string BUCKET = "BUCKET";		//空间名
 
 void picBase(Imageapi &api, const string &srcPath)
 {
@@ -77,23 +77,6 @@ void apiV1Demo(const string &srcPath) {
 	return;	
 }
 
-void pronDemo(const string &url) {
-	Imageapi::global_init();
-	
-	Imageapi api(APP_ID_V2,
-			SECRET_ID_V2,
-			SECRET_KEY_V2,
-			BUCKET,30);
-	
-	cout<<"pornDetect-----------------"<<endl;
-	api.pornDetect(url);
-	api.dump_res();
-
-	Imageapi::global_finit();
-	
-	return;	
-}
-
 void signDemo() {  
 	string signV1 = Auth::appSign(
             APP_ID_V1, SECRET_ID_V1,
@@ -121,10 +104,60 @@ void signDemo() {
 	return;	
 }
 
+void pornDemo() {
+    Imageapi::global_init();
+
+    Imageapi api(APP_ID_V2,
+            SECRET_ID_V2,
+            SECRET_KEY_V2,
+            BUCKET,30);
+    string url = "http://b.hiphotos.baidu.com/image/pic/item/8ad4b31c8701a18b1efd50a89a2f07082938fec7.jpg";
+    cout<<"pornDetect-----------------"<<endl;
+    api.pornDetect(url);
+    api.dump_res();
+
+    Imageapi::global_finit();
+
+    return; 
+}
+
+void pornUrlDemo() {
+	Imageapi::global_init();
+	Imageapi api(APP_ID_V2,
+			SECRET_ID_V2,
+			SECRET_KEY_V2,
+            BUCKET,30);
+    string pornUrl[] = {"http://b.hiphotos.baidu.com/image/pic/item/8ad4b31c8701a18b1efd50a89a2f07082938fec7.jpg",
+                        "http://c.hiphotos.baidu.com/image/h%3D200/sign=7b991b465eee3d6d3dc680cb73176d41/96dda144ad3459829813ed730bf431adcaef84b1.jpg"};
+	cout<<"pornDetect-----------------"<<endl;
+	api.pornDetectUrl(pornUrl, 2);
+	api.dump_res();
+	Imageapi::global_finit();
+	return;	
+}
+
+void pornFileDemo() {
+	Imageapi::global_init();
+	Imageapi api(APP_ID_V2,
+			SECRET_ID_V2,
+			SECRET_KEY_V2,
+            BUCKET,30);
+    string pornFile[] = {"../test1.jpg",
+                         "../test2.jpg",
+                         "../test3.png"};
+	cout<<"pornDetect-----------------"<<endl;
+	api.pornDetectFile(pornFile, 3);
+	api.dump_res();
+	Imageapi::global_finit();
+	return;	
+}
+
 int main () {
-	signDemo();
-	apiV1Demo("../v1.jpg");
-	apiV2Demo("../v2.jpg");		
-	pronDemo("http://b.hiphotos.baidu.com/image/pic/item/8ad4b31c8701a18b1efd50a89a2f07082938fec7.jpg");
+	//signDemo();
+	//apiV1Demo("../v1.jpg");
+	//apiV2Demo("../v2.jpg");		
+    pornDemo();
+    pornUrlDemo();
+	pornFileDemo();
 }
 

@@ -1,5 +1,4 @@
 #include "Auth.h"
-#include <assert.h>
 #include <cstring>
 #include <openssl/hmac.h>
 #include <sys/time.h>
@@ -106,64 +105,6 @@ std::string base64_encode(unsigned char const* bytes_to_encode, unsigned int in_
   
 }  
 
-unsigned char ToHexAuth(unsigned char x) 
-{ 
-    return  x > 9 ? x + 55 : x + 48; 
-}
-
-unsigned char FromHex(unsigned char x) 
-{ 
-    unsigned char y;
-    if (x >= 'A' && x <= 'Z') y = x - 'A' + 10;
-	else if (x >= 'a' && x <= 'z') y = x - 'a' + 10;
-	else if (x >= '0' && x <= '9') y = x - '0';
-	else assert(0);
-	return y;
-}
-
-string UrlEncode(const string& str)
-{
-	std::string strTemp = "";
-	size_t length = str.length();
-	for (size_t i = 0; i < length; i++)
-	{
-		if (isalnum((unsigned char)str[i]) || 
-				(str[i] == '-') ||
-				(str[i] == '_') || 
-				(str[i] == '.') || 
-				(str[i] == '~'))
-			strTemp += str[i];
-		else if (str[i] == ' ')
-			strTemp += "+";
-		else
-		{
-			strTemp += '%';
-			strTemp += ToHexAuth((unsigned char)str[i] >> 4);
-			strTemp += ToHexAuth((unsigned char)str[i] % 16);
-		}
-	}
-	return strTemp;
-}
-
-string UrlDecode(const string& str)
-{
-	std::string strTemp = "";
-	size_t length = str.length();
-	for (size_t i = 0; i < length; i++)
-	{
-		if (str[i] == '+') strTemp += ' ';
-		else if (str[i] == '%')
-		{
-			assert(i + 2 < length);
-			unsigned char high = FromHex((unsigned char)str[++i]);
-			unsigned char low = FromHex((unsigned char)str[++i]);
-			strTemp += high*16 + low;
-		}
-		else strTemp += str[i];
-	}
-	return strTemp;
-}
-
 string Auth::appSign(
     const uint64_t appId, 
     const string &secretId,
@@ -263,8 +204,7 @@ string Auth::appPornDetectSign(
     const string &secretId,
     const string &secretKey,
     const uint64_t expired,    
-    const string &bucketName,
-    const string &url
+    const string &bucketName
     ) {
     if (secretId.empty() || secretKey.empty()) {
         return "";
@@ -281,12 +221,12 @@ string Auth::appPornDetectSign(
 
 	input_length = snprintf(plainText, 10240, 
 #if __WORDSIZE == 64
-            "a=%lu&b=%s&k=%s&t=%lu&e=%lu&l=%s",
+            "a=%lu&b=%s&k=%s&t=%lu&e=%lu",
 #else
-            "a=%llu&b=%s&k=%s&t=%lu&e=%llu&l=%s",
+            "a=%llu&b=%s&k=%s&t=%lu&e=%llu",
 #endif
             appId, bucketName.c_str(),secretId.c_str(), 
-            now, expired, UrlEncode(url).c_str());
+            now, expired);
 
     int ret = HmacEncode("SHA1", 
             secretKey.c_str(), secretKey.length(),

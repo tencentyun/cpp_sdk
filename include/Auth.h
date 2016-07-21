@@ -49,8 +49,7 @@ public:
 		    const string &secretId,
 		    const string &secretKey,
 		    const uint64_t expired,    
-		    const string &bucketName,
-		    const string &url
+		    const string &bucketName
     );
 
 private:

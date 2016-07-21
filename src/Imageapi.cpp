@@ -3,7 +3,7 @@
 #include <cstring>
 #include <unistd.h>
 #include <errno.h>
-
+#include <stdlib.h>
 #include <openssl/sha.h>
 
 #include "Imageapi.h"
@@ -617,33 +617,118 @@ int Imageapi::del(
 
 int Imageapi::pornDetect(
         const string &pronUrl)
- {
-	reset();
-	int ret = 0;
-	char buf[1024]; 
-	uint64_t expired = time(NULL) + EXPIRED_SECONDS;
-	  
-	string sign =
-		Auth::appPornDetectSign(
-				APPID, SECRET_ID, SECRET_KEY,
-				expired, BUCKET_NAME,pronUrl);
+{
+    reset();
+    int ret = 0;
+    char buf[1024]; 
+    uint64_t expired = time(NULL) + EXPIRED_SECONDS;
 
-	vector<string> headers;
-	headers.push_back("Authorization: " + sign);
-	headers.push_back("Content-Type: application/json");
+    string sign =
+        Auth::appPornDetectSign(
+                APPID, SECRET_ID, SECRET_KEY,
+                expired, BUCKET_NAME);
+
+    vector<string> headers;
+    headers.push_back("Authorization: " + sign);
+    headers.push_back("Content-Type: application/json");
 
     int appid = APPID;
-	Json::Value reqJson;
+    Json::Value reqJson;
     reqJson["bucket"] = BUCKET_NAME;
-	reqJson["url"] = pronUrl;
-	reqJson["appid"] = appid;
+    reqJson["url"] = pronUrl;
+    reqJson["appid"] = appid;
 
-	 Json::FastWriter writer;
+    Json::FastWriter writer;
     string data = writer.write(reqJson);
 
-	retCode = sendRequest(API_IMAGEAPI_PRONDETECT_END_POINT, 1, &headers, data.c_str());
+    retCode = sendRequest(API_IMAGEAPI_PRONDETECT_END_POINT, 1, &headers, data.c_str());
 
-	return retCode;
+    return retCode;
+}
+
+int Imageapi::pornDetectUrl(
+        const string *pornUrl, const int size)
+{
+    reset();
+    int ret = 0;
+    char buf[1024]; 
+    uint64_t expired = time(NULL) + EXPIRED_SECONDS;
+
+    string sign =
+        Auth::appPornDetectSign(
+                APPID, SECRET_ID, SECRET_KEY,
+                expired, BUCKET_NAME);
+
+    vector<string> headers;
+    headers.push_back("Authorization: " + sign);
+    headers.push_back("Content-Type: application/json");
+
+    int appid = APPID;
+    Json::Value reqJson;
+    reqJson["bucket"] = BUCKET_NAME;
+    for(int i = 0; i < size; i++){
+        reqJson["url_list"].append(pornUrl[i]);
+    }
+    reqJson["appid"] = appid;
+    Json::FastWriter writer;
+    string data = writer.write(reqJson);
+
+    retCode = sendRequest(API_IMAGEAPI_PRONDETECT_END_POINT, 1, &headers, data.c_str());
+
+    return retCode;
+}
+
+int Imageapi::pornDetectFile(
+        const string *pornFile, const int size)
+{
+    reset();
+    int ret = 0;
+    uint64_t expired = time(NULL) + EXPIRED_SECONDS;
+
+    string sign =
+        Auth::appPornDetectSign(
+                APPID, SECRET_ID, SECRET_KEY,
+                expired, BUCKET_NAME);
+
+    vector<string> headers;
+    headers.push_back("Authorization: " + sign);
+
+    struct curl_httppost *firstitem = NULL,
+                         *lastitem = NULL;
+
+    int appid = APPID;
+    char appidbuf[1024];
+    snprintf(appidbuf, sizeof(appidbuf), "%d", appid);
+    string bucket = BUCKET_NAME;
+    ret = curl_formadd(&firstitem, &lastitem,
+            CURLFORM_COPYNAME, "appid",
+            CURLFORM_COPYCONTENTS, appidbuf,
+            CURLFORM_END);
+    
+    ret = curl_formadd(&firstitem, &lastitem,
+            CURLFORM_COPYNAME, "bucket",
+            CURLFORM_COPYCONTENTS, bucket.c_str(),
+            CURLFORM_END);
+
+    for(int i = 0; i < size; i++){
+        if(0 != access(pornFile[i].c_str(), F_OK|R_OK)){
+            retJson["code"] = -1;
+            retJson["message"] = "File : " + pornFile[i] + " not exist or can not be read!";
+            retCode = -1;
+            retMsg = "File : " + pornFile[i] + " not exist or can not be read!";
+            return -1;
+        }
+        char namebuf[1024];
+        snprintf(namebuf, 1024, "image[%d]", i);
+        ret = curl_formadd(&firstitem, &lastitem,
+                CURLFORM_COPYNAME, namebuf,
+                CURLFORM_FILE, pornFile[i].c_str(),
+                CURLFORM_END);
+    }
+    
+    sendRequest(API_IMAGEAPI_PRONDETECT_END_POINT, 1, &headers, NULL, firstitem);
+    curl_formfree(firstitem);
+    return retCode;
 }
 
 }//namespace Qcloud_image

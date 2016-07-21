@@ -1,5 +1,5 @@
-# cpp_sdk
-c++ sdk for 腾讯云万象图片服务
+# tencentyun/image-cpp-sdk
+腾讯云 [万象优图（Cloud Image）](https://www.qcloud.com/product/ci.html) SDK for C++
 
 #linux等类UINX系统使用手册
 ##需要安装的库和工具
@@ -112,8 +112,21 @@ How to start
 下载图片直接利用图片的下载url即可。
 如果开启了防盗链，还需要在下载url后面追加签名，请参考腾讯云的wiki页，熟悉鉴权签名的算法。
 
-#### 黄图识别
+#### 黄图识别.
+	string url = "http://pornimage-10000379.image.myqcloud.com/img_local_store/20160325/01/fe524f659297af6fca803535bcfe7a34.jpg";
 	api.pornDetect(url);
 	api.dump_res();
+	
+	string pornUrl[] = {"http://pornimage-10000379.image.myqcloud.com/img_local_store/20160325/01/fe524f659297af6fca803535bcfe7a34.jpg",
+					"http://c.hiphotos.baidu.com/image/h%3D200/sign=7b991b465eee3d6d3dc680cb73176d41/96dda144ad3459829813ed730bf431adcaef84b1.jpg"};
+	api.pornDetectUrl(pornUrl, 2);
+	api.dump_res();
+	
+	string pornFile[] = {"../test1.jpg",
+					 "../test2.jpg",
+					 "../test3.png"};
+	api.pornDetectFile(pornFile, 3);
+	api.dump_res();
+	
 	返回结果的各字段含义，请参考官网wiki文档
 	http://www.qcloud.com/wiki/%E4%B8%87%E8%B1%A1%E4%BC%98%E5%9B%BE%E6%99%BA%E8%83%BD%E9%89%B4%E9%BB%84%E6%96%87%E6%A1%A3	
