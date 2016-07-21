@@ -113,11 +113,11 @@ How to start
 如果开启了防盗链，还需要在下载url后面追加签名，请参考腾讯云的wiki页，熟悉鉴权签名的算法。
 
 #### 黄图识别.
-	string url = "http://pornimage-10000379.image.myqcloud.com/img_local_store/20160325/01/fe524f659297af6fca803535bcfe7a34.jpg";
+	string url = "http://b.hiphotos.baidu.com/image/pic/item/8ad4b31c8701a18b1efd50a89a2f07082938fec7.jpg";
 	api.pornDetect(url);
 	api.dump_res();
 	
-	string pornUrl[] = {"http://pornimage-10000379.image.myqcloud.com/img_local_store/20160325/01/fe524f659297af6fca803535bcfe7a34.jpg",
+	string pornUrl[] = {"http://b.hiphotos.baidu.com/image/pic/item/8ad4b31c8701a18b1efd50a89a2f07082938fec7.jpg",
 					"http://c.hiphotos.baidu.com/image/h%3D200/sign=7b991b465eee3d6d3dc680cb73176d41/96dda144ad3459829813ed730bf431adcaef84b1.jpg"};
 	api.pornDetectUrl(pornUrl, 2);
 	api.dump_res();
